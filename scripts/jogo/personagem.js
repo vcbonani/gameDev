@@ -1,30 +1,39 @@
-class Personagem{
+class Personagem extends Animacao{
   
-  constructor(imagem){
-    this.imagem = imagem;
-    this.frameAtual = 0;
-  }
-  
-  exibe(){
-    this.alturaPersonagem = 135;
-    this.larguraPersonagem = 110;
-    this.tamX = 220;
-    this.tamY = 270;
-    let x = this.frameAtual % 4 * this.tamX;
-    let y = Math.floor(this.frameAtual / 4) * this.tamY;
-  
-    image(this.imagem, 0, height- this.alturaPersonagem, this.larguraPersonagem, this.alturaPersonagem, x, y, this.tamX, this.tamY); 
-    this.anima();
-
-  }
-  
-  anima(){
-    this.frameAtual++;
+  constructor(imagem, x1, largura, altura, larguraSprite, alturaSprite, tipo){
+    super(imagem, x1, largura, altura, larguraSprite, alturaSprite, tipo);
     
-    if(this.frameAtual > 15){
-      this.frameAtual = 0; 
+    this.y1Inicial = height - this.altura;
+    this.y1 = this.y1Inicial;
+    this.velocidadeDoPulo = 0;
+    this.gravidade = 3;
+    this.up = 0;
+  }
+  
+  pula(){
+    this.up++; //ideia no Discord
+    if (this.up < 3){
+      this.velocidadeDoPulo = -30;
+      somPulo.play();
+    }
+  }
+  
+  aplicaGravidade(){
+    this.y1 = this.y1 + this.velocidadeDoPulo;
+    this.velocidadeDoPulo = this.velocidadeDoPulo + this.gravidade;
+    
+    if(this.y1 > this.y1Inicial){
+      this.y1 = this.y1Inicial;
+      this.up = 0;
     }
     
+  }
+  
+  estaColidindo(inimigo){
+    const precisao = 0.7;
+    const colisao = collideRectRect(this.x1, this.y1, this.largura * precisao, this.altura * precisao, inimigo.x1, inimigo.y1, inimigo.largura * precisao, inimigo.altura * precisao);
+    
+    return colisao;
   }
   
 }
